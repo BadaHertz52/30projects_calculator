@@ -17,7 +17,7 @@
   border: solid 0.6px #c5c5c5;
 }
 .calculator__display,
-.calculator__buttons {
+.calculator__btn-group {
   background-color: #f9d3e1;
   border: 0.6px solid #ebbdce;
 }
@@ -38,7 +38,7 @@
   width: fit-content;
   height: fit-content;
 }
-.calculator__buttons {
+.calculator__btn-group {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
