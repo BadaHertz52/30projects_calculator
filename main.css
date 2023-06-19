@@ -5,6 +5,22 @@
   justify-content: center;
   align-items: center;
 }
+.msg-box {
+  height: 26px;
+  width: 300px;
+  margin: 16px 0;
+}
+.msg {
+  display: none;
+}
+.msg.on {
+  display: block;
+  font-size: 16px;
+  padding: 5px;
+  color: #d70b5d;
+  text-align: center;
+  border-radius: 10px;
+}
 .calculator {
   display: flex;
   flex-direction: column;
@@ -28,16 +44,20 @@
   align-items: center;
   height: 15%;
   width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
   border-radius: 10px;
-  font-size: 30px;
   text-align: center;
   vertical-align: middle;
   overflow: hidden;
   overflow-wrap: break-word;
 }
 .display__data {
-  width: fit-content;
+  width: 100%;
   height: fit-content;
+  overflow-wrap: break-word;
+  font-size: 22px;
+  text-align: center;
 }
 .calculator__btn-group {
   display: flex;

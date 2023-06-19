@@ -5,6 +5,7 @@ class Calculator {
    */
   #dataArray = [];
 
+  $msgEl;
   $calculatorEl;
   $displayDataEl;
   $clearEl;
@@ -17,6 +18,7 @@ class Calculator {
   }
 
   assignElement() {
+    this.$msgEl = document.querySelector(".msg");
     this.$calculatorEl = document.getElementById("calculator");
     this.$displayDataEl = document.querySelector(".display__data");
     this.$clearEl = document.querySelector(".clear");
@@ -40,7 +42,9 @@ class Calculator {
    * #dataArray을 글자로 변경해 화면에 표시
    */
   updateDisplayData() {
-    this.$displayDataEl.textContent = this.#dataArray.join("");
+    const text = this.#dataArray.join("");
+    this.$displayDataEl.textContent = text;
+    this.$msgEl.classList.toggle("on", text.length > 36);
   }
   /**
    * 계산식에서 한 글자씩 삭제
@@ -50,7 +54,7 @@ class Calculator {
     const lastItem = this.#dataArray[lastIndex];
     //this.#dataArray 가 빈 배열일 경우, 실행 멈춤
     if (lastItem === undefined) return;
-    // 마지막 요소의 글자 수에 따라 다른 과정 진행
+    // 마지막 요소의 글자 수에 따라 다른 과정
     if (lastItem.length > 1) {
       const editedItem = lastItem.slice(0, lastItem.length - 1);
       this.#dataArray.splice(lastIndex, 1, editedItem);
@@ -100,6 +104,7 @@ class Calculator {
    * button__row 클릭 시, 버튼의 클래스에 따라 #dataArray에 요소를 수정 또는 추가
    */
   addData(event) {
+    if (this.#dataArray.join("").length > 36) return;
     const eventTarget = event.target;
     const data = eventTarget.textContent;
     const lastIndex = this.#dataArray.length - 1;
