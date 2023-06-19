@@ -1,7 +1,7 @@
 class Calculator {
-  #operator = undefined;
   /**
-   * string array
+   *유저가 클릭한 버튼의 data 값을 담고 있는 배열로, 계산식을 화면에 표시하고 계산하는 과정에 사용됨
+   * type :string array
    */
   #dataArray = [];
 
@@ -9,7 +9,7 @@ class Calculator {
   $displayDataEl;
   $clearEl;
   $calculateEl;
-  $calculatorBtnGroupEl;
+  $btnRowElList;
   constructor() {
     this.assignElement();
     this.addEvent();
@@ -21,52 +21,102 @@ class Calculator {
     this.$displayDataEl = document.querySelector(".display__data");
     this.$clearEl = document.querySelector(".clear");
     this.$calculateEl = document.querySelector(".calculate");
-    this.$calculatorBtnGroupEl = document.querySelector(
-      ".calculator__btn-group"
-    );
+    this.$btnRowElList = document.querySelectorAll(".button__row");
   }
 
   addEvent() {
-    this.$clearEl.addEventListener("click", this.clearData.bind(this));
+    this.$clearEl.addEventListener("click", this.onClickClearBtn.bind(this));
 
-    this.$calculateEl.addEventListener("click", this.calculateData.bind(this));
-
-    this.$calculatorBtnGroupEl.addEventListener(
+    this.$calculateEl.addEventListener(
       "click",
-      this.addData.bind(this)
+      this.onClickCalculate.bind(this)
+    );
+
+    this.$btnRowElList.forEach((i) =>
+      i.addEventListener("click", this.addData.bind(this))
     );
   }
-  clearData() {
-    this.#dataArray = [];
-    this.#operator = undefined;
-  }
-
+  /**
+   * #dataArray을 글자로 변경해 화면에 표시
+   */
   updateDisplayData() {
-    console.log("array", this.#dataArray);
     this.$displayDataEl.textContent = this.#dataArray.join("");
   }
+  /**
+   * 계산식에서 한 글자씩 삭제
+   */
+  onClickClearBtn() {
+    const lastIndex = this.#dataArray.length - 1;
+    const lastItem = this.#dataArray[lastIndex];
+    //this.#dataArray 가 빈 배열일 경우, 실행 멈춤
+    if (lastItem === undefined) return;
+    // 마지막 요소의 글자 수에 따라 다른 과정 진행
+    if (lastItem.length > 1) {
+      const editedItem = lastItem.slice(0, lastItem.length - 1);
+      this.#dataArray.splice(lastIndex, 1, editedItem);
+    } else {
+      this.#dataArray.pop();
+    }
+    this.updateDisplayData();
+  }
+  /**
+   * 숫자 이전의 연산 기호를 참고해서 계산하는 함수
+   * @param {previousResult} a
+   * @param {currentValue} c
+   * @param {currentIndex} i
+   * @returns
+   */
+  calculateData(a, c, i) {
+    const prevResult = Number(a);
+    const currentItem = Number(c);
+    let result = prevResult;
+    switch (this.#dataArray[i - 1]) {
+      case "+":
+        result = prevResult + currentItem;
+        break;
+      case "-":
+        result = prevResult - currentItem;
+        break;
+      case "*":
+        result = prevResult * currentItem;
+        break;
+      case "/":
+        result = prevResult / currentItem;
+        break;
+      default:
+        break;
+    }
+    return result;
+  }
 
-  calculateData() {}
-
+  onClickCalculate() {
+    const result = this.#dataArray.reduce((a, c, i) =>
+      i === 0 ? c : /[0-9.]/g.test(c) ? this.calculateData(a, c, i) : a
+    );
+    this.#dataArray = [result];
+    this.updateDisplayData();
+  }
+  /**
+   * button__row 클릭 시, 버튼의 클래스에 따라 #dataArray에 요소를 수정 또는 추가
+   */
   addData(event) {
     const eventTarget = event.target;
     const data = eventTarget.textContent;
     const lastIndex = this.#dataArray.length - 1;
     const lastItem = this.#dataArray[lastIndex];
-
-    switch (eventTarget.className) {
+    switch (eventTarget.classList[0]) {
       case "number":
-        console.log(/[0-9.]/g.test(lastItem), lastItem);
-        if (lastIndex < 0) {
-          this.#dataArray = [data];
+        if (lastItem === undefined) {
+          this.#dataArray = [Number(data)];
         } else {
-          // 마지막 요소가 숫자이면 n자리 수 로 변경, 숫자가 아닐 시 this.#dataArray에 data  추가
+          // 마지막 요소가 숫자이면 n자리 수로 변경, 숫자가 아닐 시 this.#dataArray에 data  추가
           /[0-9.]/g.test(lastItem)
             ? this.#dataArray.splice(lastIndex, 1, `${lastItem}${data}`)
             : this.#dataArray.push(data);
         }
         break;
       case "operator":
+        if (!/[0-9.]/g.test(lastItem)) return;
         this.#dataArray.push(data);
         break;
       case "decimal":
