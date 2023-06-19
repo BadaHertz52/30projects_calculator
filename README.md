@@ -20,7 +20,7 @@
 
 #### 📷 프로젝트 작동 화면
 
-<img alt="calculator project simulation" src="./calculator.gif" width="150px"/>
+<img alt="calculator project simulation" src="./calculator.gif" width="250px"/>
 
 <br/>
 1+1 처럼 하나의 연산 기호에 대한 계산에서 그치는 것이 아니라 여러 개의 연산에 대해 계산할 수 있는 계산기를 만들고 싶었다.
