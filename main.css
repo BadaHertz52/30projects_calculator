@@ -1,6 +1,7 @@
 .container {
   height: 100vh;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
@@ -97,4 +98,11 @@
 }
 .button__row > .double {
   width: 50%;
+}
+
+footer {
+  margin-top: 32px;
+  text-align: center;
+  font-size: 14px;
+  color: #3b3b3b;
 }
